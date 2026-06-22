@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DL Photo & Signature Tool · 2D Soft</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    /* ----- RESET ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f0f4fa;
+      padding: 20px;
+    }
+
+    /* ----- SOFT CARD (2D) ----- */
+    .card-soft {
+      max-width: 1000px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 40px;
+      padding: 32px 36px 40px;
+      box-shadow: 0 8px 30px rgba(0, 20, 40, 0.08), 0 2px 8px rgba(0, 0, 0, 0.02);
+      border: 1px solid #eaf0f6;
+      transition: box-shadow 0.2s;
+    }
+
+    .card-soft:hover {
+      box-shadow: 0 12px 40px rgba(0, 20, 40, 0.10);
+    }
+
+    /* ----- HEADER ----- */
+    .header-soft {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px 24px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #eef3f8;
+    }
+
+    .title-soft {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .title-soft i {
+      font-size: 28px;
+      color: #2a7bb5;
+      background: #e7f0f9;
+      padding: 10px 14px;
+      border-radius: 20px;
+    }
+
+    .title-soft h1 {
+      font-size: 26px;
+      font-weight: 600;
+      color: #12406b;
+      letter-spacing: -0.3px;
+    }
+
+    .badge-soft {
+      background: #e7f0f9;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #1a5e8a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-soft i {
+      color: #2a7bb5;
+    }
+
+    /* ----- INFO STRIP ----- */
+    .info-strip-soft {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 24px;
+      background: #f5f9fe;
+      padding: 12px 22px;
+      border-radius: 40px;
+      margin-bottom: 28px;
+      color: #1d4c77;
+      font-size: 0.92rem;
+      border: 1px solid #e6eef7;
+    }
+
+    .info-strip-soft span {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .info-strip-soft i {
+      color: #3a8ec4;
+      width: 18px;
+      text-align: center;
+    }
+
+    /* ----- GRID (2D) ----- */
+    .grid-soft {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin: 20px 0 28px;
+    }
+
+    @media (max-width: 720px) {
+      .grid-soft {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      .card-soft {
+        padding: 22px 16px 30px;
+      }
+    }
+
+    /* ----- SOFT BOX ----- */
+    .box-soft {
+      background: #f8fbfe;
+      border-radius: 32px;
+      padding: 20px 20px 24px;
+      border: 1px solid #e6eef7;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .box-soft:hover {
+      border-color: #c8dbe9;
+      box-shadow: 0 4px 16px rgba(0, 40, 80, 0.04);
+    }
+
+    .box-title-soft {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 19px;
+      font-weight: 600;
+      color: #12406b;
+      margin-bottom: 14px;
+    }
+
+    .box-title-soft i {
+      font-size: 20px;
+      color: #2a7bb5;
+      width: 32px;
+      text-align: center;
+    }
+
+    /* file label */
+    .file-label-soft {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      border: 2px dashed #cfe0ef;
+      border-radius: 24px;
+      padding: 22px 10px 20px;
+      cursor: pointer;
+      transition: 0.2s;
+      color: #1d4c77;
+      gap: 4px;
+    }
+
+    .file-label-soft:hover {
+      border-color: #8ab3d4;
+      background: #f5faff;
+    }
+
+    .file-label-soft i {
+      font-size: 36px;
+      color: #4a8fc4;
+      margin-bottom: 2px;
+    }
+
+    .file-label-soft span {
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .file-label-soft small {
+      font-size: 0.8rem;
+      color: #6a8caa;
+      font-weight: 400;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    /* preview */
+    .preview-soft {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 14px 10px;
+      margin: 12px 0 10px;
+      text-align: center;
+      min-height: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #eaf0f6;
+    }
+
+    .preview-soft img {
+      max-width: 100%;
+      max-height: 145px;
+      border-radius: 12px;
+      background: #f5f9fe;
+      padding: 4px;
+      object-fit: contain;
+    }
+
+    .preview-soft .placeholder {
+      color: #7a9bb8;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* info row */
+    .info-row-soft {
+      display: flex;
+      justify-content: space-between;
+      background: #edf4fa;
+      padding: 8px 16px;
+      border-radius: 40px;
+      margin: 10px 0 6px;
+      color: #12406b;
+      font-size: 0.82rem;
+      flex-wrap: wrap;
+      gap: 4px 12px;
+    }
+
+    .info-row-soft i {
+      color: #3a8ec4;
+      margin-right: 4px;
+      width: 16px;
+      text-align: center;
+    }
+
+    /* buttons */
+    .btn-group-soft {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .btn-soft {
+      background: #ffffff;
+      border: 1px solid #d0dfec;
+      padding: 10px 22px;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: #12406b;
+      cursor: pointer;
+      transition: 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1 0 auto;
+      justify-content: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+
+    .btn-soft i {
+      color: #3a8ec4;
+    }
+
+    .btn-primary-soft {
+      background: #1a5e8a;
+      border: 1px solid #1a5e8a;
+      color: white;
+      box-shadow: 0 4px 12px rgba(20, 80, 140, 0.15);
+    }
+
+    .btn-primary-soft i {
+      color: white;
+    }
+
+    .btn-primary-soft:hover {
+      background: #0f4a70;
+      border-color: #0f4a70;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(20, 80, 140, 0.20);
+    }
+
+    .btn-outline-soft {
+      background: transparent;
+      border-color: #d0dfec;
+    }
+
+    .btn-outline-soft:hover {
+      background: #edf4fa;
+      border-color: #b0cade;
+    }
+
+    .btn-soft:disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    /* footer */
+    .footer-soft {
+      margin-top: 28px;
+      background: #f5f9fe;
+      border-radius: 40px;
+      padding: 14px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid #e6eef7;
+      color: #1d4c77;
+      font-size: 0.88rem;
+      gap: 10px 20px;
+    }
+
+    .footer-soft i {
+      color: #3a8ec4;
+      margin-right: 5px;
+    }
+
+    .footer-badge-soft {
+      background: #e7f0f9;
+      padding: 4px 18px;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: #1a5e8a;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card-soft">
+
+  <!-- HEADER -->
+  <div class="header-soft">
+    <div class="title-soft">
+      <i class="fas fa-id-card"></i>
+      <h1>DL Photo &amp; Signature</h1>
+    </div>
+    <div class="badge-soft">
+      <i class="fas fa-check-circle"></i> Sarathi · Parivahan
+      <i class="fas fa-arrow-right" style="margin-left:6px;"></i>
+      <span style="background:#d4e4f0;padding:2px 12px;border-radius:30px;">2D soft</span>
+    </div>
+  </div>
+
+  <!-- INFO STRIP -->
+  <div class="info-strip-soft">
+    <span><i class="fas fa-arrows-alt"></i> 420×525 · 256×64</span>
+    <span><i class="fas fa-weight"></i> 10–20 KB</span>
+    <span><i class="fas fa-file-image"></i> JPG output</span>
+    <span><i class="fas fa-cloud-upload-alt"></i> Direct upload</span>
+  </div>
+
+  <!-- GRID -->
+  <div class="grid-soft">
+
+    <!-- PHOTO -->
+    <div class="box-soft">
+      <div class="box-title-soft"><i class="fas fa-camera-retro"></i> Photo</div>
+      <label class="file-label-soft" for="photoInputSoft">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <span>Upload photo</span>
+        <small>JPG, PNG, WEBP</small>
+      </label>
+      <input type="file" id="photoInputSoft" accept="image/*" />
+      <div class="preview-soft" id="photoPreviewWrapSoft">
+        <img id="photoPreviewSoft" src="#" alt="preview" style="display:none;" />
+        <span class="placeholder" id="photoPlaceholderSoft"><i class="fas fa-image"></i> No image</span>
+      </div>
+      <div class="info-row-soft">
+        <span><i class="fas fa-arrows-alt-h"></i> 420 × 525</span>
+        <span><i class="fas fa-weight"></i> <span id="photoSizeSoft">—</span></span>
+        <span><i class="fas fa-file-alt"></i> <span id="photoFormatSoft">—</span></span>
+      </div>
+      <div class="btn-group-soft">
+        <button class="btn-soft btn-primary-soft" id="downloadPhotoBtnSoft" disabled><i class="fas fa-download"></i> Download</button>
+        <button class="btn-soft btn-outline-soft" id="resetPhotoBtnSoft"><i class="fas fa-undo-alt"></i> Reset</button>
+      </div>
+    </div>
+
+    <!-- SIGNATURE -->
+    <div class="box-soft">
+      <div class="box-title-soft"><i class="fas fa-pen-fancy"></i> Signature</div>
+      <label class="file-label-soft" for="sigInputSoft">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <span>Upload signature</span>
+        <small>JPG, PNG, WEBP</small>
+      </label>
+      <input type="file" id="sigInputSoft" accept="image/*" />
+      <div class="preview-soft" id="sigPreviewWrapSoft">
+        <img id="sigPreviewSoft" src="#" alt="preview" style="display:none;" />
+        <span class="placeholder" id="sigPlaceholderSoft"><i class="fas fa-pen"></i> No signature</span>
+      </div>
+      <div class="info-row-soft">
+        <span><i class="fas fa-arrows-alt-h"></i> 256 × 64</span>
+        <span><i class="fas fa-weight"></i> <span id="sigSizeSoft">—</span></span>
+        <span><i class="fas fa-file-alt"></i> <span id="sigFormatSoft">—</span></span>
+      </div>
+      <div class="btn-group-soft">
+        <button class="btn-soft btn-primary-soft" id="downloadSigBtnSoft" disabled><i class="fas fa-download"></i> Download</button>
+        <button class="btn-soft btn-outline-soft" id="resetSigBtnSoft"><i class="fas fa-undo-alt"></i> Reset</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer-soft">
+    <span><i class="fas fa-check-circle" style="color:#2a8a4a;"></i> Auto‑resized &amp; compressed to JPG</span>
+    <span><i class="fas fa-robot"></i> 10–20 KB ready</span>
+    <span class="footer-badge-soft"><i class="fas fa-upload"></i> Sarathi ready</span>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ---------- helpers ----------
+    function formatFileSize(bytes) {
+      if (!bytes || bytes === 0) return '—';
+      if (bytes < 1024) return bytes + ' B';
+      return (bytes / 1024).toFixed(1) + ' KB';
+    }
+
+    function resizeImageToCanvas(image, targetWidth, targetHeight) {
+      const canvas = document.createElement('canvas');
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(image, 0, 0, targetWidth, targetHeight);
+      return canvas;
+    }
+
+    function compressCanvasToJpg(canvas, maxSizeKB = 20, minSizeKB = 10) {
+      let quality = 0.92;
+      let binary = null;
+      let sizeKB = 0;
+      for (let attempt = 0; attempt < 12; attempt++) {
+        const dataUrl = canvas.toDataURL('image/jpeg', quality);
+        const byteString = atob(dataUrl.split(',')[1]);
+        const bytes = byteString.length;
+        sizeKB = bytes / 1024;
+        if (sizeKB <= maxSizeKB && sizeKB >= minSizeKB) {
+          binary = dataUrl;
+          break;
+        }
+        if (sizeKB > maxSizeKB) quality -= 0.07;
+        else quality += 0.06;
+        if (quality < 0.1) quality = 0.1;
+        if (quality > 0.98) quality = 0.98;
+      }
+      if (!binary) binary = canvas.toDataURL('image/jpeg', 0.75);
+      return binary;
+    }
+
+    function dataURLToBlob(dataUrl) {
+      const parts = dataUrl.split(',');
+      const mime = parts[0].match(/:(.*?);/)[1];
+      const byteString = atob(parts[1]);
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      return new Blob([ab], { type: mime });
+    }
+
+    async function processImage(file, type) {
+      return new Promise((resolve, reject) => {
+        if (!file) return reject('No file');
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = new Image();
+          img.onload = function() {
+            let targetWidth, targetHeight;
+            if (type === 'photo') {
+              targetWidth = 420;
+              targetHeight = 525;
+            } else {
+              targetWidth = 256;
+              targetHeight = 64;
+            }
+            const canvas = resizeImageToCanvas(img, targetWidth, targetHeight);
+            const jpgDataUrl = compressCanvasToJpg(canvas, 20, 10);
+            const byteString = atob(jpgDataUrl.split(',')[1]);
+            const fileSizeBytes = byteString.length;
+            const blob = dataURLToBlob(jpgDataUrl);
+            const processedFile = new File([blob], `${type}_processed.jpg`, { type: 'image/jpeg' });
+            resolve({
+              dataUrl: jpgDataUrl,
+              fileSizeBytes: fileSizeBytes,
+              file: processedFile,
+              blob: blob,
+              width: targetWidth,
+              height: targetHeight
+            });
+          };
+          img.onerror = () => reject('Image load error');
+          img.src = e.target.result;
+        };
+        reader.onerror = () => reject('FileReader error');
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // ---------- DOM refs ----------
+    const photoInput = document.getElementById('photoInputSoft');
+    const sigInput = document.getElementById('sigInputSoft');
+    const photoPreview = document.getElementById('photoPreviewSoft');
+    const sigPreview = document.getElementById('sigPreviewSoft');
+    const photoPlaceholder = document.getElementById('photoPlaceholderSoft');
+    const sigPlaceholder = document.getElementById('sigPlaceholderSoft');
+    const photoSize = document.getElementById('photoSizeSoft');
+    const sigSize = document.getElementById('sigSizeSoft');
+    const photoFormat = document.getElementById('photoFormatSoft');
+    const sigFormat = document.getElementById('sigFormatSoft');
+    const downloadPhotoBtn = document.getElementById('downloadPhotoBtnSoft');
+    const downloadSigBtn = document.getElementById('downloadSigBtnSoft');
+    const resetPhotoBtn = document.getElementById('resetPhotoBtnSoft');
+    const resetSigBtn = document.getElementById('resetSigBtnSoft');
+
+    let photoData = null, sigData = null;
+
+    function updatePhotoUI(data) {
+      if (data) {
+        photoPreview.src = data.dataUrl;
+        photoPreview.style.display = 'block';
+        photoPlaceholder.style.display = 'none';
+        photoSize.textContent = formatFileSize(data.fileSizeBytes);
+        photoFormat.textContent = 'JPG';
+        downloadPhotoBtn.disabled = false;
+        photoData = data;
+      } else {
+        photoPreview.src = '#';
+        photoPreview.style.display = 'none';
+        photoPlaceholder.style.display = 'block';
+        photoSize.textContent = '—';
+        photoFormat.textContent = '—';
+        downloadPhotoBtn.disabled = true;
+        photoData = null;
+      }
+    }
+
+    function updateSigUI(data) {
+      if (data) {
+        sigPreview.src = data.dataUrl;
+        sigPreview.style.display = 'block';
+        sigPlaceholder.style.display = 'none';
+        sigSize.textContent = formatFileSize(data.fileSizeBytes);
+        sigFormat.textContent = 'JPG';
+        downloadSigBtn.disabled = false;
+        sigData = data;
+      } else {
+        sigPreview.src = '#';
+        sigPreview.style.display = 'none';
+        sigPlaceholder.style.display = 'block';
+        sigSize.textContent = '—';
+        sigFormat.textContent = '—';
+        downloadSigBtn.disabled = true;
+        sigData = null;
+      }
+    }
+
+    function resetPhoto() { photoInput.value = ''; updatePhotoUI(null); }
+    function resetSig() { sigInput.value = ''; updateSigUI(null); }
+
+    async function handleFileUpload(file, type) {
+      if (!file) return;
+      try {
+        const result = await processImage(file, type);
+        if (type === 'photo') updatePhotoUI(result);
+        else updateSigUI(result);
+      } catch (err) {
+        alert('Error: ' + err);
+        if (type === 'photo') resetPhoto(); else resetSig();
+      }
+    }
+
+    // events
+    photoInput.addEventListener('change', function(e) {
+      if (this.files && this.files[0]) handleFileUpload(this.files[0], 'photo');
+    });
+    sigInput.addEventListener('change', function(e) {
+      if (this.files && this.files[0]) handleFileUpload(this.files[0], 'signature');
+    });
+
+    resetPhotoBtn.addEventListener('click', resetPhoto);
+    resetSigBtn.addEventListener('click', resetSig);
+
+    downloadPhotoBtn.addEventListener('click', function() {
+      if (photoData && photoData.blob) {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(photoData.blob);
+        link.download = 'DL_photo_420x525.jpg';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(link.href), 100);
+      }
+    });
+
+    downloadSigBtn.addEventListener('click', function() {
+      if (sigData && sigData.blob) {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(sigData.blob);
+        link.download = 'DL_signature_256x64.jpg';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(link.href), 100);
+      }
+    });
+  })();
+</script>
+</body>
+</html>
