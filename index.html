@@ -615,7 +615,7 @@
         </div>
 
         <!-- ============================================================ -->
-        <!--  PART 2 : NSDL                                               -->
+        <!--  PART 2 : NSDL  (FIXED DIMENSIONS)                           -->
         <!-- ============================================================ -->
         <div class="card-soft card-nsdl">
 
@@ -632,9 +632,9 @@
                 </div>
             </div>
 
-            <!-- INFO STRIP -->
+            <!-- INFO STRIP — updated to show correct NSDL PAN dimensions -->
             <div class="info-strip-soft" style="background:#f2faf6; color:#0d5a44; border-color:#d4e8e0;">
-                <span><i class="fas fa-arrows-alt" style="color:#1a8a6a;"></i> 200×230 · 140×60</span>
+                <span><i class="fas fa-arrows-alt" style="color:#1a8a6a;"></i> 276×197 · 157×354</span>
                 <span><i class="fas fa-weight" style="color:#1a8a6a;"></i> 10–20 KB</span>
                 <span><i class="fas fa-file-image" style="color:#1a8a6a;"></i> JPG output</span>
                 <span><i class="fas fa-cloud-upload-alt" style="color:#1a8a6a;"></i> Direct upload</span>
@@ -643,7 +643,7 @@
             <!-- GRID -->
             <div class="grid-soft">
 
-                <!-- PHOTO -->
+                <!-- PHOTO — NSDL: 3.5×2.5 cm @ 200 DPI → 276×197 px -->
                 <div class="box-soft">
                     <div class="box-title-soft" style="color:#0d5a44;"><i class="fas fa-camera-retro" style="color:#1a7a5e;"></i> Photo</div>
                     <label class="file-label-soft" for="photoInputNsdl">
@@ -657,7 +657,7 @@
                         <span class="placeholder" id="photoPlaceholderNsdl" style="color:#4a8a7a;"><i class="fas fa-image"></i> No image</span>
                     </div>
                     <div class="info-row-soft" style="background:#e4f3ed; color:#0d5a44;">
-                        <span><i class="fas fa-arrows-alt-h" style="color:#1a8a6a;"></i> 200 × 230</span>
+                        <span><i class="fas fa-arrows-alt-h" style="color:#1a8a6a;"></i> 276 × 197  (3.5×2.5 cm)</span>
                         <span><i class="fas fa-weight" style="color:#1a8a6a;"></i> <span id="photoSizeNsdl">—</span></span>
                         <span><i class="fas fa-file-alt" style="color:#1a8a6a;"></i> <span id="photoFormatNsdl">—</span></span>
                     </div>
@@ -667,7 +667,7 @@
                     </div>
                 </div>
 
-                <!-- SIGNATURE -->
+                <!-- SIGNATURE — NSDL: 2×4.5 cm @ 200 DPI → 157×354 px -->
                 <div class="box-soft">
                     <div class="box-title-soft" style="color:#0d5a44;"><i class="fas fa-pen-fancy" style="color:#1a7a5e;"></i> Signature</div>
                     <label class="file-label-soft" for="sigInputNsdl">
@@ -681,7 +681,7 @@
                         <span class="placeholder" id="sigPlaceholderNsdl" style="color:#4a8a7a;"><i class="fas fa-pen"></i> No signature</span>
                     </div>
                     <div class="info-row-soft" style="background:#e4f3ed; color:#0d5a44;">
-                        <span><i class="fas fa-arrows-alt-h" style="color:#1a8a6a;"></i> 140 × 60</span>
+                        <span><i class="fas fa-arrows-alt-h" style="color:#1a8a6a;"></i> 157 × 354  (2×4.5 cm)</span>
                         <span><i class="fas fa-weight" style="color:#1a8a6a;"></i> <span id="sigSizeNsdl">—</span></span>
                         <span><i class="fas fa-file-alt" style="color:#1a8a6a;"></i> <span id="sigFormatNsdl">—</span></span>
                     </div>
@@ -788,7 +788,6 @@
             // ---------- factory: create module ----------
             function createModule(config) {
                 const {
-                    // DOM ids
                     photoInputId,
                     sigInputId,
                     photoPreviewId,
@@ -803,12 +802,10 @@
                     downloadSigBtnId,
                     resetPhotoBtnId,
                     resetSigBtnId,
-                    // dimensions
                     photoWidth,
                     photoHeight,
                     sigWidth,
                     sigHeight,
-                    // labels
                     photoLabel,
                     sigLabel
                 } = config;
@@ -933,7 +930,7 @@
                 return { resetPhoto, resetSig };
             }
 
-            // ---------- instantiate Sarathi (DL) ----------
+            // ---------- instantiate Sarathi (DL) — unchanged ----------
             const dlModule = createModule({
                 photoInputId: 'photoInputSoft',
                 sigInputId: 'sigInputSoft',
@@ -957,7 +954,9 @@
                 sigLabel: 'DL Signature'
             });
 
-            // ---------- instantiate NSDL ----------
+            // ---------- instantiate NSDL — FIXED DIMENSIONS ----------
+            // Photo: 3.5×2.5 cm @ 200 DPI → 276×197 px
+            // Signature: 2×4.5 cm @ 200 DPI → 157×354 px
             const nsdlModule = createModule({
                 photoInputId: 'photoInputNsdl',
                 sigInputId: 'sigInputNsdl',
@@ -973,10 +972,10 @@
                 downloadSigBtnId: 'downloadSigBtnNsdl',
                 resetPhotoBtnId: 'resetPhotoBtnNsdl',
                 resetSigBtnId: 'resetSigBtnNsdl',
-                photoWidth: 200,
-                photoHeight: 230,
-                sigWidth: 140,
-                sigHeight: 60,
+                photoWidth: 276,
+                photoHeight: 197,
+                sigWidth: 157,
+                sigHeight: 354,
                 photoLabel: 'NSDL Photo',
                 sigLabel: 'NSDL Signature'
             });
