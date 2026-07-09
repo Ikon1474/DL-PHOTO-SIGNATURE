@@ -3,9 +3,17 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DL & NSDL Photo Signature Tool · 2D Soft</title>
+    <title>2D Soft · DL/NSDL + PDF Compressor</title>
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <!-- PDF libraries for compression -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js">
+    </script>
+
     <style>
         /* ----- RESET ----- */
         * {
@@ -456,6 +464,134 @@
             color: #4a8a7a;
         }
 
+        /* --- PDF Compressor theme (purple/indigo) --- */
+        .card-pdf .title-soft i {
+            color: #5a3d8a;
+            background: #eee8f5;
+        }
+
+        .card-pdf .title-soft h1 {
+            color: #4a2d7a;
+        }
+
+        .card-pdf .badge-soft {
+            background: #eee8f5;
+            color: #4a2d7a;
+        }
+
+        .card-pdf .badge-soft i {
+            color: #5a3d8a;
+        }
+
+        .card-pdf .badge-soft span {
+            background: #ddd0eb;
+        }
+
+        .card-pdf .info-strip-soft {
+            background: #f5f0fa;
+            color: #4a2d7a;
+            border-color: #e0d6ec;
+        }
+
+        .card-pdf .info-strip-soft i {
+            color: #6a4d9a;
+        }
+
+        .card-pdf .box-soft {
+            background: #f7f4fc;
+            border-color: #e0d6ec;
+        }
+
+        .card-pdf .box-soft:hover {
+            border-color: #c4b4dc;
+        }
+
+        .card-pdf .box-title-soft {
+            color: #4a2d7a;
+        }
+
+        .card-pdf .box-title-soft i {
+            color: #5a3d8a;
+        }
+
+        .card-pdf .file-label-soft {
+            border-color: #d0c4e4;
+        }
+
+        .card-pdf .file-label-soft:hover {
+            border-color: #a890cc;
+            background: #f3edfa;
+        }
+
+        .card-pdf .file-label-soft i {
+            color: #6a4d9a;
+        }
+
+        .card-pdf .file-label-soft {
+            color: #4a2d7a;
+        }
+
+        .card-pdf .info-row-soft {
+            background: #eee8f5;
+            color: #4a2d7a;
+        }
+
+        .card-pdf .info-row-soft i {
+            color: #6a4d9a;
+        }
+
+        .card-pdf .btn-primary-soft {
+            background: #5a3d8a;
+            border-color: #5a3d8a;
+            box-shadow: 0 4px 12px rgba(90, 61, 138, 0.15);
+        }
+
+        .card-pdf .btn-primary-soft i {
+            color: white;
+        }
+
+        .card-pdf .btn-primary-soft:hover {
+            background: #4a2d7a;
+            border-color: #4a2d7a;
+            box-shadow: 0 6px 16px rgba(90, 61, 138, 0.20);
+        }
+
+        .card-pdf .btn-outline-soft {
+            border-color: #d0c4e4;
+        }
+
+        .card-pdf .btn-outline-soft:hover {
+            background: #eee8f5;
+            border-color: #b09ccc;
+        }
+
+        .card-pdf .btn-soft i {
+            color: #6a4d9a;
+        }
+
+        .card-pdf .footer-soft {
+            background: #f5f0fa;
+            border-color: #e0d6ec;
+            color: #4a2d7a;
+        }
+
+        .card-pdf .footer-soft i {
+            color: #6a4d9a;
+        }
+
+        .card-pdf .footer-badge-soft {
+            background: #eee8f5;
+            color: #4a2d7a;
+        }
+
+        .card-pdf .preview-soft {
+            border-color: #e0d6ec;
+        }
+
+        .card-pdf .preview-soft .placeholder {
+            color: #7a5d9a;
+        }
+
         /* divider */
         .section-divider {
             display: flex;
@@ -479,6 +615,306 @@
             background: #f0f4fa;
             padding: 0 16px;
             border-radius: 40px;
+        }
+
+        /* ----- PDF Compressor specific styles ----- */
+        .upload-zone-pdf {
+            border: 2px dashed #d0c4e4;
+            border-radius: 24px;
+            padding: 32px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.25s, background 0.2s;
+            background: #faf8fc;
+            position: relative;
+        }
+
+        .upload-zone-pdf:hover,
+        .upload-zone-pdf.dragover {
+            border-color: #8a70b8;
+            background: #f5f0fa;
+        }
+
+        .upload-zone-pdf .icon {
+            font-size: 44px;
+            margin-bottom: 6px;
+            display: block;
+            color: #6a4d9a;
+        }
+
+        .upload-zone-pdf h3 {
+            font-weight: 600;
+            font-size: 17px;
+            color: #4a2d7a;
+        }
+
+        .upload-zone-pdf p {
+            color: #7a6a8a;
+            font-size: 14px;
+            margin-top: 2px;
+        }
+
+        .upload-zone-pdf .hint {
+            font-size: 13px;
+            color: #9a8aaa;
+            margin-top: 8px;
+        }
+
+        .upload-zone-pdf input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* file list for PDF */
+        .file-list-pdf {
+            margin-top: 16px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .file-list-pdf.active {
+            display: flex;
+        }
+
+        .file-item-pdf {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f5f0fa;
+            border-radius: 14px;
+            padding: 10px 16px;
+            gap: 12px;
+            flex-wrap: wrap;
+            border: 1px solid #e0d6ec;
+        }
+
+        .file-item-pdf .info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1 1 180px;
+            min-width: 0;
+        }
+
+        .file-item-pdf .info .name {
+            font-weight: 500;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #3a2a4a;
+        }
+
+        .file-item-pdf .info .size {
+            font-size: 13px;
+            color: #7a6a8a;
+            white-space: nowrap;
+        }
+
+        .file-item-pdf .status {
+            font-size: 13px;
+            font-weight: 500;
+            padding: 4px 14px;
+            border-radius: 30px;
+            background: #e8e0f0;
+            color: #5a4a6a;
+            white-space: nowrap;
+        }
+
+        .file-item-pdf .status.done {
+            background: #e0f0e6;
+            color: #1a6a4a;
+        }
+
+        .file-item-pdf .status.error {
+            background: #fde8e8;
+            color: #b33a3a;
+        }
+
+        .file-item-pdf .status.processing {
+            background: #fff3d6;
+            color: #a8701a;
+            animation: pulse 1.2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .file-item-pdf .btn-download {
+            background: #5a3d8a;
+            border: none;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            white-space: nowrap;
+        }
+
+        .file-item-pdf .btn-download:hover {
+            background: #4a2d7a;
+        }
+
+        .file-item-pdf .btn-download:active {
+            transform: scale(0.96);
+        }
+
+        .file-item-pdf .btn-download:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* PDF controls */
+        .controls-pdf {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 16px 20px;
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid #e0d6ec;
+        }
+
+        .controls-pdf .target-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .controls-pdf .target-group label {
+            font-weight: 500;
+            font-size: 14px;
+            color: #4a2d7a;
+        }
+
+        .controls-pdf .target-group input[type="number"] {
+            width: 100px;
+            padding: 8px 10px;
+            border: 1.5px solid #d0c4e4;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            background: #faf8fc;
+            transition: border-color 0.2s;
+            outline: none;
+            color: #3a2a4a;
+        }
+
+        .controls-pdf .target-group input[type="number"]:focus {
+            border-color: #6a4d9a;
+            box-shadow: 0 0 0 3px rgba(90, 61, 138, 0.12);
+        }
+
+        .controls-pdf .target-group span {
+            font-size: 14px;
+            color: #7a6a8a;
+        }
+
+        .controls-pdf .btn-compress {
+            background: linear-gradient(135deg, #4a2d7a, #6a4d9a);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            font-size: 15px;
+            padding: 10px 32px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+            box-shadow: 0 4px 14px rgba(90, 61, 138, 0.25);
+            margin-left: auto;
+            white-space: nowrap;
+        }
+
+        .controls-pdf .btn-compress:hover {
+            opacity: 0.9;
+            box-shadow: 0 6px 20px rgba(90, 61, 138, 0.30);
+        }
+
+        .controls-pdf .btn-compress:active {
+            transform: scale(0.97);
+        }
+
+        .controls-pdf .btn-compress:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* PDF progress */
+        .progress-wrap-pdf {
+            margin-top: 18px;
+            display: none;
+        }
+
+        .progress-wrap-pdf.active {
+            display: block;
+        }
+
+        .progress-bar-pdf {
+            width: 100%;
+            height: 6px;
+            background: #e8e0f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-pdf .fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #5a3d8a, #8a70b8);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text-pdf {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #7a6a8a;
+            margin-top: 6px;
+        }
+
+        /* security notice for PDF */
+        .security-pdf {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 24px;
+            padding: 14px 20px;
+            background: #f5f0fa;
+            border-radius: 14px;
+            font-size: 14px;
+            color: #4a2d7a;
+            border-left: 4px solid #6a4d9a;
+        }
+
+        .security-pdf .shield {
+            font-size: 22px;
+        }
+
+        .security-pdf a {
+            color: #5a3d8a;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .security-pdf a:hover {
+            text-decoration: underline;
         }
 
         @media (max-width: 600px) {
@@ -510,6 +946,42 @@
             .footer-soft {
                 font-size: 0.8rem;
                 padding: 12px 16px;
+            }
+            .controls-pdf {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .controls-pdf .btn-compress {
+                margin-left: 0;
+                width: 100%;
+                justify-content: center;
+            }
+            .file-item-pdf {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .file-item-pdf .info {
+                flex: 1 1 auto;
+            }
+            .file-item-pdf .btn-download {
+                align-self: flex-start;
+            }
+            .security-pdf {
+                flex-wrap: wrap;
+                font-size: 13px;
+            }
+            .upload-zone-pdf {
+                padding: 24px 16px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .controls-pdf .target-group {
+                width: 100%;
+            }
+            .controls-pdf .target-group input[type="number"] {
+                flex: 1;
             }
         }
     </style>
@@ -606,7 +1078,7 @@
         </div>
 
         <!-- ============================================================ -->
-        <!--  DIVIDER                                                      -->
+        <!--  DIVIDER 1                                                    -->
         <!-- ============================================================ -->
         <div class="section-divider">
             <span class="line"></span>
@@ -701,11 +1173,104 @@
             </div>
         </div>
 
+        <!-- ============================================================ -->
+        <!--  DIVIDER 2                                                    -->
+        <!-- ============================================================ -->
+        <div class="section-divider">
+            <span class="line"></span>
+            <span class="label"><i class="fas fa-arrow-down"></i> PDF COMPRESSOR <i class="fas fa-arrow-down"></i></span>
+            <span class="line"></span>
+        </div>
+
+        <!-- ============================================================ -->
+        <!--  PART 3 : PDF COMPRESSOR                                     -->
+        <!-- ============================================================ -->
+        <div class="card-soft card-pdf">
+
+            <!-- HEADER -->
+            <div class="header-soft">
+                <div class="title-soft">
+                    <i class="fas fa-file-pdf" style="color:#5a3d8a; background:#eee8f5;"></i>
+                    <h1 style="color:#4a2d7a;">PDF Compressor</h1>
+                </div>
+                <div class="badge-soft" style="background:#eee8f5; color:#4a2d7a;">
+                    <i class="fas fa-check-circle" style="color:#5a3d8a;"></i> Compress to any size
+                    <i class="fas fa-arrow-right" style="margin-left:6px;"></i>
+                    <span style="background:#ddd0eb; padding:2px 12px; border-radius:30px;">2D soft</span>
+                </div>
+            </div>
+
+            <!-- INFO STRIP -->
+            <div class="info-strip-soft" style="background:#f5f0fa; color:#4a2d7a; border-color:#e0d6ec;">
+                <span><i class="fas fa-arrows-alt" style="color:#6a4d9a;"></i> Compress to 200 KB default</span>
+                <span><i class="fas fa-weight" style="color:#6a4d9a;"></i> Adjustable target</span>
+                <span><i class="fas fa-file-image" style="color:#6a4d9a;"></i> JPG re-encoding</span>
+                <span><i class="fas fa-cloud-upload-alt" style="color:#6a4d9a;"></i> 3 files at a time</span>
+            </div>
+
+            <!-- UPLOAD ZONE -->
+            <div class="upload-zone-pdf" id="uploadZonePdf">
+                <span class="icon">📤</span>
+                <h3>Drop your PDF here</h3>
+                <p>or click to browse</p>
+                <div class="hint">Supports up to 3 files at once · Max 50 MB each</div>
+                <input type="file" id="fileInputPdf" accept=".pdf" multiple />
+            </div>
+
+            <!-- FILE LIST -->
+            <div class="file-list-pdf" id="fileListPdf"></div>
+
+            <!-- CONTROLS -->
+            <div class="controls-pdf">
+                <div class="target-group">
+                    <label for="targetSizePdf">Target size</label>
+                    <input type="number" id="targetSizePdf" value="200" min="10" max="5000" step="5" />
+                    <span>KB</span>
+                </div>
+                <button class="btn-compress" id="compressBtnPdf">⚡ Compress All</button>
+            </div>
+
+            <!-- PROGRESS -->
+            <div class="progress-wrap-pdf" id="progressWrapPdf">
+                <div class="progress-bar-pdf">
+                    <div class="fill" id="progressFillPdf"></div>
+                </div>
+                <div class="progress-text-pdf">
+                    <span id="progressLabelPdf">Processing…</span>
+                    <span id="progressPercentPdf">0%</span>
+                </div>
+            </div>
+
+            <!-- SECURITY -->
+            <div class="security-pdf">
+                <span class="shield">🔒</span>
+                <div>
+                    <strong>Secure &amp; private.</strong> Your files are processed locally in your browser.
+                    Nothing is uploaded to any server. All data stays on your device.
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="footer-soft" style="background:#f5f0fa; border-color:#e0d6ec; color:#4a2d7a;">
+                <span><i class="fas fa-check-circle" style="color:#5a3d8a;"></i> Auto‑compressed to target size</span>
+                <span><i class="fas fa-robot" style="color:#6a4d9a;"></i> Smart quality adjustment</span>
+                <span class="footer-badge-soft" style="background:#eee8f5; color:#4a2d7a;"><i class="fas fa-download" style="color:#6a4d9a;"></i> Download ready</span>
+            </div>
+        </div>
+
     </div>
 
+    <!-- ============================================================ -->
+    <!--  JAVASCRIPT                                                   -->
+    <!-- ============================================================ -->
     <script>
         (function() {
-            // ---------- helpers ----------
+            'use strict';
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  PART A : DL / NSDL Photo & Signature Modules
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
             function formatFileSize(bytes) {
                 if (!bytes || bytes === 0) return '—';
                 if (bytes < 1024) return bytes + ' B';
@@ -721,7 +1286,7 @@
                 return canvas;
             }
 
-            function compressCanvasToJpg(canvas, maxSizeKB = 20, minSizeKB = 10) {
+            function compressCanvasToJpg(canvas, maxSizeKB, minSizeKB) {
                 let quality = 0.92;
                 let binary = null;
                 let sizeKB = 0;
@@ -785,29 +1350,17 @@
                 });
             }
 
-            // ---------- factory: create module ----------
             function createModule(config) {
                 const {
-                    photoInputId,
-                    sigInputId,
-                    photoPreviewId,
-                    sigPreviewId,
-                    photoPlaceholderId,
-                    sigPlaceholderId,
-                    photoSizeId,
-                    sigSizeId,
-                    photoFormatId,
-                    sigFormatId,
-                    downloadPhotoBtnId,
-                    downloadSigBtnId,
-                    resetPhotoBtnId,
-                    resetSigBtnId,
-                    photoWidth,
-                    photoHeight,
-                    sigWidth,
-                    sigHeight,
-                    photoLabel,
-                    sigLabel
+                    photoInputId, sigInputId,
+                    photoPreviewId, sigPreviewId,
+                    photoPlaceholderId, sigPlaceholderId,
+                    photoSizeId, sigSizeId,
+                    photoFormatId, sigFormatId,
+                    downloadPhotoBtnId, downloadSigBtnId,
+                    resetPhotoBtnId, resetSigBtnId,
+                    photoWidth, photoHeight,
+                    sigWidth, sigHeight
                 } = config;
 
                 const photoInput = document.getElementById(photoInputId);
@@ -892,7 +1445,6 @@
                     }
                 }
 
-                // events
                 photoInput.addEventListener('change', function(e) {
                     if (this.files && this.files[0]) handleFileUpload(this.files[0], 'photo');
                 });
@@ -907,7 +1459,7 @@
                     if (photoData && photoData.blob) {
                         const link = document.createElement('a');
                         link.href = URL.createObjectURL(photoData.blob);
-                        link.download = `NSDL_photo_${photoWidth}x${photoHeight}.jpg`;
+                        link.download = `photo_${photoWidth}x${photoHeight}.jpg`;
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
@@ -919,7 +1471,7 @@
                     if (sigData && sigData.blob) {
                         const link = document.createElement('a');
                         link.href = URL.createObjectURL(sigData.blob);
-                        link.download = `NSDL_signature_${sigWidth}x${sigHeight}.jpg`;
+                        link.download = `signature_${sigWidth}x${sigHeight}.jpg`;
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
@@ -930,8 +1482,8 @@
                 return { resetPhoto, resetSig };
             }
 
-            // ---------- instantiate Sarathi (DL) — unchanged ----------
-            const dlModule = createModule({
+            // Instantiate DL (Sarathi)
+            createModule({
                 photoInputId: 'photoInputSoft',
                 sigInputId: 'sigInputSoft',
                 photoPreviewId: 'photoPreviewSoft',
@@ -949,15 +1501,11 @@
                 photoWidth: 420,
                 photoHeight: 525,
                 sigWidth: 256,
-                sigHeight: 64,
-                photoLabel: 'DL Photo',
-                sigLabel: 'DL Signature'
+                sigHeight: 64
             });
 
-            // ---------- instantiate NSDL — CORRECTED DIMENSIONS ----------
-            // Photo: 3.5 cm (H) × 2.5 cm (W) @ 200 DPI → width=197, height=276
-            // Signature: 2 cm (H) × 4.5 cm (W) @ 200 DPI → width=354, height=157
-            const nsdlModule = createModule({
+            // Instantiate NSDL
+            createModule({
                 photoInputId: 'photoInputNsdl',
                 sigInputId: 'sigInputNsdl',
                 photoPreviewId: 'photoPreviewNsdl',
@@ -975,10 +1523,452 @@
                 photoWidth: 197,
                 photoHeight: 276,
                 sigWidth: 354,
-                sigHeight: 157,
-                photoLabel: 'NSDL Photo',
-                sigLabel: 'NSDL Signature'
+                sigHeight: 157
             });
+
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //  PART B : PDF COMPRESSOR
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+            // pdf.js setup
+            const pdfjsLib = window.pdfjsLib;
+            if (pdfjsLib) {
+                pdfjsLib.GlobalWorkerOptions.workerSrc =
+                    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            }
+
+            const { PDFDocument } = window.PDFLib || {};
+
+            // DOM refs
+            const uploadZonePdf = document.getElementById('uploadZonePdf');
+            const fileInputPdf = document.getElementById('fileInputPdf');
+            const fileListPdf = document.getElementById('fileListPdf');
+            const compressBtnPdf = document.getElementById('compressBtnPdf');
+            const targetSizePdf = document.getElementById('targetSizePdf');
+            const progressWrapPdf = document.getElementById('progressWrapPdf');
+            const progressFillPdf = document.getElementById('progressFillPdf');
+            const progressLabelPdf = document.getElementById('progressLabelPdf');
+            const progressPercentPdf = document.getElementById('progressPercentPdf');
+
+            // State
+            const pdfFiles = []; // { file, name, size, status, compressedBlob, compressedSize }
+
+            let isProcessingPdf = false;
+
+            // Helper: format size
+            function formatSizePdf(bytes) {
+                if (bytes < 1024) return bytes + ' B';
+                if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+                return (bytes / 1048576).toFixed(1) + ' MB';
+            }
+
+            function getFileExtension(name) {
+                return name.split('.').pop().toLowerCase();
+            }
+
+            function escapeHtml(str) {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+
+            // Render file list
+            function renderFileListPdf() {
+                if (pdfFiles.length === 0) {
+                    fileListPdf.classList.remove('active');
+                    fileListPdf.innerHTML = '';
+                    return;
+                }
+                fileListPdf.classList.add('active');
+
+                let html = '';
+                pdfFiles.forEach((f, idx) => {
+                    let statusText = 'Pending';
+                    let statusClass = '';
+                    let downloadBtn = '';
+
+                    if (f.status === 'processing') {
+                        statusText = '⏳ Compressing…';
+                        statusClass = 'processing';
+                    } else if (f.status === 'done') {
+                        statusText = '✅ Done';
+                        statusClass = 'done';
+                        const sizeLabel = f.compressedSize !== undefined ? formatSizePdf(f.compressedSize) : '—';
+                        downloadBtn =
+                            `<button class="btn-download" data-index="${idx}">⬇ Download (${sizeLabel})</button>`;
+                    } else if (f.status === 'error') {
+                        statusText = '❌ Error';
+                        statusClass = 'error';
+                    } else {
+                        statusText = '⏳ Ready';
+                        statusClass = '';
+                    }
+
+                    html += `
+                        <div class="file-item-pdf" data-index="${idx}">
+                            <div class="info">
+                                <span class="name">${escapeHtml(f.name)}</span>
+                                <span class="size">${formatSizePdf(f.size)}</span>
+                            </div>
+                            <span class="status ${statusClass}">${statusText}</span>
+                            ${downloadBtn}
+                        </div>
+                    `;
+                });
+
+                fileListPdf.innerHTML = html;
+
+                fileListPdf.querySelectorAll('.btn-download').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const idx = parseInt(btn.dataset.index, 10);
+                        const f = pdfFiles[idx];
+                        if (f && f.compressedBlob) {
+                            const a = document.createElement('a');
+                            const name = f.name.replace(/\.pdf$/i, '') + '_compressed.pdf';
+                            a.href = URL.createObjectURL(f.compressedBlob);
+                            a.download = name;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+                        }
+                    });
+                });
+
+                updateButtonsPdf();
+            }
+
+            // Handle file upload
+            function handleFilesPdf(selectedFiles) {
+                const allowed = Array.from(selectedFiles).filter(f =>
+                    f.type === 'application/pdf' || getFileExtension(f.name) === 'pdf'
+                );
+
+                if (allowed.length === 0) {
+                    alert('Please select valid PDF files.');
+                    return;
+                }
+
+                const toAdd = allowed.slice(0, 3);
+                if (allowed.length > 3) {
+                    alert('Maximum 3 files at a time. Only the first 3 will be processed.');
+                }
+
+                for (const file of toAdd) {
+                    const exists = pdfFiles.some(f => f.name === file.name && f.size === file.size);
+                    if (!exists) {
+                        pdfFiles.push({
+                            file: file,
+                            name: file.name,
+                            size: file.size,
+                            status: 'ready',
+                            compressedBlob: null,
+                            compressedSize: null,
+                        });
+                    }
+                }
+
+                renderFileListPdf();
+                fileInputPdf.value = '';
+                updateButtonsPdf();
+            }
+
+            fileInputPdf.addEventListener('change', (e) => {
+                handleFilesPdf(e.target.files);
+            });
+
+            // Drag & drop
+            uploadZonePdf.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadZonePdf.classList.add('dragover');
+            });
+
+            uploadZonePdf.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                uploadZonePdf.classList.remove('dragover');
+            });
+
+            uploadZonePdf.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadZonePdf.classList.remove('dragover');
+                if (e.dataTransfer.files.length) {
+                    handleFilesPdf(e.dataTransfer.files);
+                }
+            });
+
+            uploadZonePdf.addEventListener('click', (e) => {
+                if (e.target.tagName !== 'INPUT') {
+                    fileInputPdf.click();
+                }
+            });
+
+            function updateButtonsPdf() {
+                const hasReady = pdfFiles.some(f => f.status === 'ready' || f.status === 'done');
+                compressBtnPdf.disabled = isProcessingPdf || !hasReady;
+            }
+
+            // ── PDF compression core ──
+
+            async function buildPDFFromCanvases(canvases, quality, pageCount) {
+                const pdfDoc = await PDFDocument.create();
+
+                for (let i = 0; i < canvases.length; i++) {
+                    const canvas = canvases[i];
+                    const imgData = canvas.toDataURL('image/jpeg', quality);
+                    const imgBytes = await fetch(imgData).then(r => r.arrayBuffer());
+
+                    let img;
+                    try {
+                        img = await pdfDoc.embedJpg(imgBytes);
+                    } catch (err) {
+                        const pngData = canvas.toDataURL('image/png');
+                        const pngBytes = await fetch(pngData).then(r => r.arrayBuffer());
+                        img = await pdfDoc.embedPng(pngBytes);
+                    }
+
+                    const page = pdfDoc.addPage([img.width, img.height]);
+                    page.drawImage(img, {
+                        x: 0,
+                        y: 0,
+                        width: img.width,
+                        height: img.height,
+                    });
+                }
+
+                const pdfBytes = await pdfDoc.save();
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                return {
+                    blob,
+                    size: blob.size,
+                };
+            }
+
+            async function compressPDFFile(file, targetKB) {
+                const targetBytes = targetKB * 1024;
+                const arrayBuffer = await file.arrayBuffer();
+
+                // If already smaller than target, return original
+                if (arrayBuffer.byteLength <= targetBytes) {
+                    return {
+                        blob: new Blob([arrayBuffer], { type: 'application/pdf' }),
+                        size: arrayBuffer.byteLength,
+                        originalSize: arrayBuffer.byteLength,
+                        quality: 1,
+                    };
+                }
+
+                let pdfDoc;
+                try {
+                    pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                } catch (err) {
+                    throw new Error('Failed to read PDF: ' + err.message);
+                }
+
+                const pageCount = pdfDoc.numPages;
+                const canvases = [];
+
+                for (let i = 1; i <= pageCount; i++) {
+                    const page = await pdfDoc.getPage(i);
+                    const viewport = page.getViewport({ scale: 1.5 });
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+
+                    const renderContext = {
+                        canvasContext: context,
+                        viewport: viewport,
+                    };
+                    await page.render(renderContext).promise;
+                    canvases.push(canvas);
+                }
+
+                // Binary search for quality
+                let low = 0.05;
+                let high = 0.95;
+                let bestQuality = 0.5;
+                let bestBlob = null;
+                let bestSize = Infinity;
+                const maxIterations = 12;
+                let iteration = 0;
+
+                const tries = [0.9, 0.7, 0.5, 0.3, 0.15, 0.08];
+                for (const q of tries) {
+                    const result = await buildPDFFromCanvases(canvases, q, pageCount);
+                    if (result.size <= targetBytes) {
+                        bestQuality = q;
+                        bestBlob = result.blob;
+                        bestSize = result.size;
+                        break;
+                    }
+                    if (result.size < bestSize) {
+                        bestSize = result.size;
+                        bestBlob = result.blob;
+                        bestQuality = q;
+                    }
+                }
+
+                if (bestBlob && bestSize <= targetBytes) {
+                    return {
+                        blob: bestBlob,
+                        size: bestSize,
+                        originalSize: arrayBuffer.byteLength,
+                        quality: bestQuality,
+                    };
+                }
+
+                while (iteration < maxIterations) {
+                    iteration++;
+                    const mid = (low + high) / 2;
+                    const result = await buildPDFFromCanvases(canvases, mid, pageCount);
+
+                    if (result.size <= targetBytes) {
+                        bestQuality = mid;
+                        bestBlob = result.blob;
+                        bestSize = result.size;
+                        high = mid;
+                    } else {
+                        low = mid;
+                    }
+
+                    if (Math.abs(result.size - targetBytes) < targetBytes * 0.05) {
+                        break;
+                    }
+                    if (bestBlob && bestSize <= targetBytes && bestSize > targetBytes * 0.8) {
+                        break;
+                    }
+                }
+
+                if (!bestBlob || bestSize > targetBytes) {
+                    const result = await buildPDFFromCanvases(canvases, 0.03, pageCount);
+                    if (result.size < bestSize) {
+                        bestBlob = result.blob;
+                        bestSize = result.size;
+                        bestQuality = 0.03;
+                    }
+                }
+
+                if (!bestBlob) {
+                    throw new Error('Could not compress PDF to target size.');
+                }
+
+                return {
+                    blob: bestBlob,
+                    size: bestSize,
+                    originalSize: arrayBuffer.byteLength,
+                    quality: bestQuality,
+                };
+            }
+
+            // ── Process all files ──
+
+            async function processAllFilesPdf() {
+                if (isProcessingPdf) return;
+                if (pdfFiles.length === 0) {
+                    alert('Please upload at least one PDF file.');
+                    return;
+                }
+
+                const targetKB = parseInt(targetSizePdf.value, 10);
+                if (isNaN(targetKB) || targetKB < 5) {
+                    alert('Please enter a valid target size (minimum 5 KB).');
+                    return;
+                }
+
+                const hasReady = pdfFiles.some(f => f.status === 'ready' || f.status === 'error');
+                if (!hasReady) {
+                    const allDone = pdfFiles.every(f => f.status === 'done');
+                    if (allDone) {
+                        pdfFiles.forEach(f => {
+                            f.status = 'ready';
+                            f.compressedBlob = null;
+                            f.compressedSize = null;
+                        });
+                        renderFileListPdf();
+                    } else {
+                        alert('All files are already processed or in progress.');
+                        return;
+                    }
+                }
+
+                isProcessingPdf = true;
+                compressBtnPdf.disabled = true;
+                progressWrapPdf.classList.add('active');
+                progressFillPdf.style.width = '0%';
+                progressLabelPdf.textContent = 'Starting…';
+                progressPercentPdf.textContent = '0%';
+
+                const total = pdfFiles.filter(f => f.status === 'ready' || f.status === 'error').length;
+                let completed = 0;
+
+                for (let i = 0; i < pdfFiles.length; i++) {
+                    const f = pdfFiles[i];
+                    if (f.status === 'done') {
+                        completed++;
+                        continue;
+                    }
+
+                    f.status = 'processing';
+                    renderFileListPdf();
+                    updateProgressPdf(completed, total, `Compressing "${f.name}"…`);
+
+                    try {
+                        const result = await compressPDFFile(f.file, targetKB);
+                        f.compressedBlob = result.blob;
+                        f.compressedSize = result.size;
+                        f.status = 'done';
+                    } catch (err) {
+                        f.status = 'error';
+                        f.compressedBlob = null;
+                        f.compressedSize = null;
+                        console.error(`Error compressing "${f.name}":`, err);
+                    }
+
+                    completed++;
+                    renderFileListPdf();
+                    updateProgressPdf(completed, total, `Processed ${completed}/${total}`);
+                }
+
+                progressFillPdf.style.width = '100%';
+                progressLabelPdf.textContent = '✅ All done!';
+                progressPercentPdf.textContent = '100%';
+
+                isProcessingPdf = false;
+                updateButtonsPdf();
+
+                setTimeout(() => {
+                    if (!isProcessingPdf) {
+                        progressWrapPdf.classList.remove('active');
+                    }
+                }, 3000);
+
+                const failed = pdfFiles.filter(f => f.status === 'error');
+                if (failed.length > 0) {
+                    alert(
+                        `${failed.length} file(s) failed to compress. Please check the console for details or try with a different PDF.`);
+                }
+            }
+
+            function updateProgressPdf(completed, total, label) {
+                const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+                progressFillPdf.style.width = Math.min(pct, 100) + '%';
+                progressLabelPdf.textContent = label || 'Processing…';
+                progressPercentPdf.textContent = Math.min(pct, 100) + '%';
+            }
+
+            compressBtnPdf.addEventListener('click', processAllFilesPdf);
+
+            targetSizePdf.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    compressBtnPdf.click();
+                }
+            });
+
+            // init
+            renderFileListPdf();
+            updateButtonsPdf();
 
         })();
     </script>
