@@ -1183,7 +1183,7 @@
         </div>
 
         <!-- ============================================================ -->
-        <!--  PART 3 : PDF COMPRESSOR                                     -->
+        <!--  PART 3 : PDF COMPRESSOR (Target fixed ≥ 270 KB)             -->
         <!-- ============================================================ -->
         <div class="card-soft card-pdf">
 
@@ -1200,10 +1200,10 @@
                 </div>
             </div>
 
-            <!-- INFO STRIP -->
+            <!-- INFO STRIP - updated default -->
             <div class="info-strip-soft" style="background:#f5f0fa; color:#4a2d7a; border-color:#e0d6ec;">
-                <span><i class="fas fa-arrows-alt" style="color:#6a4d9a;"></i> Compress to 200 KB default</span>
-                <span><i class="fas fa-weight" style="color:#6a4d9a;"></i> Adjustable target</span>
+                <span><i class="fas fa-arrows-alt" style="color:#6a4d9a;"></i> Compress to 270 KB default</span>
+                <span><i class="fas fa-weight" style="color:#6a4d9a;"></i> Min 270 KB</span>
                 <span><i class="fas fa-file-image" style="color:#6a4d9a;"></i> JPG re-encoding</span>
                 <span><i class="fas fa-cloud-upload-alt" style="color:#6a4d9a;"></i> 3 files at a time</span>
             </div>
@@ -1220,11 +1220,11 @@
             <!-- FILE LIST -->
             <div class="file-list-pdf" id="fileListPdf"></div>
 
-            <!-- CONTROLS -->
+            <!-- CONTROLS - min and default set to 270 -->
             <div class="controls-pdf">
                 <div class="target-group">
                     <label for="targetSizePdf">Target size</label>
-                    <input type="number" id="targetSizePdf" value="200" min="10" max="5000" step="5" />
+                    <input type="number" id="targetSizePdf" value="270" min="270" max="5000" step="5" />
                     <span>KB</span>
                 </div>
                 <button class="btn-compress" id="compressBtnPdf">⚡ Compress All</button>
@@ -1252,7 +1252,7 @@
 
             <!-- FOOTER -->
             <div class="footer-soft" style="background:#f5f0fa; border-color:#e0d6ec; color:#4a2d7a;">
-                <span><i class="fas fa-check-circle" style="color:#5a3d8a;"></i> Auto‑compressed to target size</span>
+                <span><i class="fas fa-check-circle" style="color:#5a3d8a;"></i> Auto‑compressed to target size (≥270 KB)</span>
                 <span><i class="fas fa-robot" style="color:#6a4d9a;"></i> Smart quality adjustment</span>
                 <span class="footer-badge-soft" style="background:#eee8f5; color:#4a2d7a;"><i class="fas fa-download" style="color:#6a4d9a;"></i> Download ready</span>
             </div>
@@ -1528,7 +1528,7 @@
 
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            //  PART B : PDF COMPRESSOR
+            //  PART B : PDF COMPRESSOR (Target fixed ≥ 270 KB)
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
             // pdf.js setup
@@ -1871,8 +1871,9 @@
                 }
 
                 const targetKB = parseInt(targetSizePdf.value, 10);
-                if (isNaN(targetKB) || targetKB < 5) {
-                    alert('Please enter a valid target size (minimum 5 KB).');
+                // Enforce minimum 270 KB
+                if (isNaN(targetKB) || targetKB < 270) {
+                    alert('Target size must be at least 270 KB.');
                     return;
                 }
 
