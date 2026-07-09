@@ -729,6 +729,11 @@
             color: #1a6a4a;
         }
 
+        .file-item-pdf .status.skipped {
+            background: #fff8e0;
+            color: #8a7a2a;
+        }
+
         .file-item-pdf .status.error {
             background: #fde8e8;
             color: #b33a3a;
@@ -1247,6 +1252,8 @@
                 <div>
                     <strong>Secure &amp; private.</strong> Your files are processed locally in your browser.
                     Nothing is uploaded to any server. All data stays on your device.
+                    <br />
+                    <small style="color:#7a5d9a;"><i class="fas fa-info-circle"></i> Files already smaller than the target size are kept as-is to preserve quality.</small>
                 </div>
             </div>
 
@@ -1552,7 +1559,7 @@
             const progressPercentPdf = document.getElementById('progressPercentPdf');
 
             // State
-            const pdfFiles = []; // { file, name, size, status, compressedBlob, compressedSize }
+            const pdfFiles = []; // { file, name, size, status, compressedBlob, compressedSize, skipped }
 
             let isProcessingPdf = false;
 
@@ -1592,8 +1599,13 @@
                         statusText = '⏳ Compressing…';
                         statusClass = 'processing';
                     } else if (f.status === 'done') {
-                        statusText = '✅ Done';
-                        statusClass = 'done';
+                        if (f.skipped) {
+                            statusText = '✅ Skipped (≤ target)';
+                            statusClass = 'skipped';
+                        } else {
+                            statusText = '✅ Done';
+                            statusClass = 'done';
+                        }
                         const sizeLabel = f.compressedSize !== undefined ? formatSizePdf(f.compressedSize) : '—';
                         downloadBtn =
                             `<button class="btn-download" data-index="${idx}">⬇ Download (${sizeLabel})</button>`;
@@ -1665,6 +1677,7 @@
                             status: 'ready',
                             compressedBlob: null,
                             compressedSize: null,
+                            skipped: false,
                         });
                     }
                 }
@@ -1755,6 +1768,7 @@
                         size: arrayBuffer.byteLength,
                         originalSize: arrayBuffer.byteLength,
                         quality: 1,
+                        skipped: true,
                     };
                 }
 
@@ -1815,6 +1829,7 @@
                         size: bestSize,
                         originalSize: arrayBuffer.byteLength,
                         quality: bestQuality,
+                        skipped: false,
                     };
                 }
 
@@ -1858,6 +1873,7 @@
                     size: bestSize,
                     originalSize: arrayBuffer.byteLength,
                     quality: bestQuality,
+                    skipped: false,
                 };
             }
 
@@ -1885,6 +1901,7 @@
                             f.status = 'ready';
                             f.compressedBlob = null;
                             f.compressedSize = null;
+                            f.skipped = false;
                         });
                         renderFileListPdf();
                     } else {
@@ -1919,10 +1936,12 @@
                         f.compressedBlob = result.blob;
                         f.compressedSize = result.size;
                         f.status = 'done';
+                        f.skipped = result.skipped || false;
                     } catch (err) {
                         f.status = 'error';
                         f.compressedBlob = null;
                         f.compressedSize = null;
+                        f.skipped = false;
                         console.error(`Error compressing "${f.name}":`, err);
                     }
 
